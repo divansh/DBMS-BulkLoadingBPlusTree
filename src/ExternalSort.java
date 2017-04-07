@@ -18,10 +18,16 @@ public class ExternalSort {
 	long num_records =0;
 	public void sortAndWrite(String fileName) throws IOException {
 
-		File file = new File(fileName);
-		fileSize =  file.length();
-		fileSize = (long)Math.ceil( (( double) fileSize)/Integer.BYTES);
-		System.out.println(fileSize);
+//		File file = new File(fileName);
+//		fileSize =  file.length();
+//		fileSize = (long)Math.ceil( (( double) fileSize)/Integer.BYTES);
+//		System.out.println(fileSize);
+		BufferedReader temp = new BufferedReader(new FileReader(fileName));
+		String xString  = temp.readLine();
+		while(xString!=null){
+			fileSize++;
+			xString = temp.readLine();
+		}
 		BufferedReader bReader = new BufferedReader(new FileReader(fileName));	
 
 		int [] arr = new int[maxArrSz];

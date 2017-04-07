@@ -1,14 +1,12 @@
-import java.awt.List;
-import java.lang.reflect.Array;
-import java.security.cert.X509CRLEntry;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-import java.util.logging.Level;
-
-import javax.security.auth.x500.X500Principal;
-import javax.swing.RootPaneContainer;
-import javax.swing.text.AbstractDocument.LeafElement;
 
 /**
  * 
@@ -225,9 +223,9 @@ public class Block {
 		for(int i=0;i<aList.size();i++)
 		{
 			System.out.print(aList.get(i).dataList.toString());
-			if(aList.get(i).parent!=null){
-			//System.out.print(" ((p = "+ aList.get(i).parent.dataList.toString()+ "))" );
-			}
+//			if(aList.get(i).parent!=null){
+//			System.out.print(" ((p = "+ aList.get(i).parent.dataList.toString()+ "))" );
+//			}
 		}
 		System.out.println();
 		ArrayList<Block> xList = new ArrayList<>();
@@ -239,25 +237,81 @@ public class Block {
 			}
 		}
 		aList.clear();
-		printTree(xList);
-
-		
-		
+		printTree(xList);	
+	}	
+	
+	public Block  insertBottomUp (String filename, int order) throws IOException {
+			BufferedReader bReader = new BufferedReader(new FileReader(filename));
+			ArrayList<Block> aList = new ArrayList<>();
+			Block curr = new Block();
+			String line = bReader.readLine();
+			while(line!=null)
+			{
+				if(curr.dataList.size()==order-1)
+				{
+					aList.add(curr);
+					curr = new Block();
+				}
+				curr.dataList.add(Integer.parseInt(line));
+				line = bReader.readLine();
+			}
+			if(curr.dataList.size()>0)
+			{
+				aList.add(curr);
+			}
+			bReader.close();
+//			System.out.println("!!@#$%$##@@@");
+//			for(int i=0;i<aList.size();i++)System.out.print(aList.get(i).dataList.toString()+"  ");
+			Block root =  builder(aList, order).get(0);
+			return root;
 	}
 	
-	public static void main(String[] args) {
-		
-		Block curr = null;
-		Block dummy = new Block();
-		while(true)
+	public ArrayList<Block> builder(ArrayList<Block>aList, int order)
+	{
+		if(aList.size()==1)
 		{
-			Scanner in = new Scanner(System.in);
-			int a = in.nextInt();
-			curr = mainRoot;
-			dummy.myinsert(a, 4,curr);
-			dummy.printer();
+			return aList;
 		}
+		ArrayList<Block> nList = new ArrayList<>();
+		Block curr = new Block();
+		for(int i=0;i<aList.size();i++)
+		{
+			if(curr.dataList.size()==order-1)
+			{
+				nList.add(curr);
+				curr = new Block();
+			}
 		
+				curr.dataList.add(aList.get(i).dataList.get(0));
+				curr.ptr_arr.add(aList.get(i));
+		}
+		if(curr.dataList.size()>0)
+		{
+			nList.add(curr);
+		}
+		return builder(nList, order);
 	}
-
+	
+	public void printBottomUp(Block root) {
+		ArrayList<Block> aList = new ArrayList<>();
+		aList.add(root);
+		System.out.println("TREE=====================TREE");
+		printTree(aList);
+		System.out.println("TREE=====================TREE");
+	}
+	
+	public static void main(String[] args) throws IOException {
+		
+//		Block curr = null;
+		Block dummy = new Block();
+//		while(true)
+//		{
+//			Scanner in = new Scanner(System.in);
+//			int a = in.nextInt();
+//			curr = mainRoot;
+//			dummy.myinsert(a, 4,curr);
+//			dummy.printer();
+//		}		
+		dummy.printBottomUp(dummy.insertBottomUp("final_sorted.out", 4));
+	}
 }
