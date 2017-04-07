@@ -10,6 +10,17 @@ import javax.security.auth.x500.X500Principal;
 import javax.swing.RootPaneContainer;
 import javax.swing.text.AbstractDocument.LeafElement;
 
+/**
+ * 
+ * No duplicates allowed
+ * reference:
+ * https://github.com/Sayef/bplus-tree/blob/6af1557cb9e61dcd2e2cb506c08d77dfe8b00e92/BPlusTree.cpp
+ * 
+ * @author divansh
+ *
+ */
+
+
 public class Block {
 	public static Block mainRoot= new Block();
 	int num_keys;
@@ -115,8 +126,8 @@ public class Block {
 		}
 		else
 		{	
-			System.out.println("not root");
-			System.out.println("node = "+ node.dataList.toString());
+			//System.out.println("not root");
+			//System.out.println("node = "+ node.dataList.toString());
 			node.parent.dataList.add(median);
 			node.parent.ptr_arr.add(rightChild);
 			node.parent.num_keys++;
